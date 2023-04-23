@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Spotify Stats</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        /* Spotify colors */
+        :root {
+            --spotify-green: #1DB954;
+            --spotify-dark: #191414;
+        }
+
+        /* Page styles */
+        body {
+            background-color: var(--spotify-dark);
+            color: white;
+            font-family: 'Helvetica Neue', sans-serif;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-top: 3rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            color: var(--spotify-green);
+        }
+
+        /* Button styles */
+        .btn-spotify {
+            color: white;
+            background-color: var(--spotify-green);
+            border: none;
+            margin-top: 20px;
+        }
+
+        .btn-spotify:hover {
+            background-color: #1ed760;
+        }
+
+        /* Tab styles */
+        .nav-tabs .nav-link.active {
+            color: var(--spotify-green);
+            border-color: var(--spotify-green);
+        }
+
+        .nav-tabs .nav-link {
+            color: white;
+            border: none;
+        }
+
+        /* List styles */
+        .list-group-item {
+            background-color: transparent;
+            border: none;
+            color: white;
+            padding: 1rem;
+        }
+
+        .list-group-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+        }
+
+        .list-group-item.active {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .list-group-item img {
+            max-width: 64px;
+            max-height: 64px;
+            margin-right: 1rem;
+        }
+
+        /* Footer styles */
+        footer {
+            bottom: 0;
+            width: 100%;
+            text-align: center;
+            font-size: 0.8rem;
+            padding: 0.5rem;
+        }
+
+        h1 {
+            margin-bottom: 50px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Spotify Stats</h1>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <a href="/top/tracks" class="btn btn-lg btn-block btn-primary btn-spotify">Top Tracks</a>
+            </div>
+            <div class="col-md-4">
+                <a href="/top/artists" class="btn btn-lg btn-block btn-primary btn-spotify">Top Artists</a>
+            </div>
+            <div class="col-md-4">
+                <a href="/recents" class="btn btn-lg btn-block btn-primary btn-spotify">Recenty played</a>
+            </div>
+        </div>
+        <br>
+        <br>
+        <div class="row">
+            <div class="col-md-12">
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="songs-tab" data-toggle="tab" href="#songs" role="tab"
+                            aria-controls="songs" aria-selected="true">Short Term</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="artists-tab" data-toggle="tab" href="#artists" role="tab"
+                            aria-controls="artists" aria-selected="false">Medium Term</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="albums-tab" data-toggle="tab" href="#albums" role="tab"
+                            aria-controls="albums" aria-selected="false">Long Term</a>
+                    </li>
+                </ul>
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="songs" role="tabpanel" aria-labelledby="songs-tab">
+                        <div class="list-group">
+                            {% for item in st %}
+                            <a href="{{ item.link }}" class="list-group-item list-group-item-action active d-flex">
+                                <img src="{{ item.image }}" alt="{{ item.name }}">
+                                <div class="ms-2 me-auto">
+                                    <div class="fw-bold">{{ item.name }}</div>
+                                    {{ item.artist }}
+                                  </div>
+                            </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="artists" role="tabpanel" aria-labelledby="artists-tab">
+                        <div class="list-group">
+                            {% for item in mt %}
+                            <a href="{{ item.link }}" class="list-group-item list-group-item-action active d-flex">
+                                <img src="{{ item.image }}" alt="{{ item.name }}">
+                                <div class="ms-2 me-auto">
+                                    <div class="fw-bold">{{ item.name }}</div>
+                                    {{ item.artist }}
+                                  </div>
+                            </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="albums" role="tabpanel" aria-labelledby="albums-tab">
+                        <div class="list-group">
+                            {% for item in lt %}
+                            <a href="{{ item.link }}" class="list-group-item list-group-item-action active d-flex">
+                                <img src="{{ item.image }}" alt="{{ item.name }}">
+                                <div class="ms-2 me-auto">
+                                    <div class="fw-bold">{{ item.name }}</div>
+                                    {{ item.artist }}
+                                  </div>
+                            </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer>
+        Spotify stats developed by <a href="https://yogeshwaran01.github.io">yogeshwaran</a>
+    </footer>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+
+</html>
