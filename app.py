@@ -3,11 +3,9 @@ import os
 from dataclasses import dataclass
 
 import spotipy
-from dotenv import load_dotenv
 from flask import Flask, redirect, render_template, request, session
 from spotipy.oauth2 import SpotifyOAuth
 
-load_dotenv()
 
 
 app = Flask(__name__)
