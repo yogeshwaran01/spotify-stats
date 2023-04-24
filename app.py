@@ -11,11 +11,15 @@ from spotipy.oauth2 import SpotifyOAuth
 app = Flask(__name__)
 app.secret_key = os.getenv("secret_key")
 
+cache_handler = spotipy.cache_handler.FlaskSessionCacheHandler(session)
+
+
 spotify = SpotifyOAuth(
     client_id=os.getenv("client_id"),
     client_secret=os.getenv("client_secret"),
     redirect_uri=os.getenv('redirect_uri')+"/callback",
     scope="user-top-read user-read-recently-played",
+    cache_handler=cache_handler, show_dialog=True
 )
 
 
@@ -90,14 +94,14 @@ def from_cache(file):
 @app.route("/")
 def index():
     if not session.get("spotify_token"):
-        return redirect("/login")
+        return render_template("home.html", logged_in=False)
     return render_template("home.html")
 
 
 @app.route("/top/tracks")
 def tracks():
     if not session.get("spotify_token"):
-        return redirect("/login")
+        return redirect("/")
     sp = spotipy.Spotify(auth=session.get("spotify_token"))
     long_term_tracks = sp.current_user_top_tracks(time_range="long_term", limit=50)["items"]
     middle_term_tracks = sp.current_user_top_tracks(time_range="medium_term", limit=50)["items"]
@@ -116,7 +120,7 @@ def tracks():
 @app.route("/top/artists")
 def artists():
     if not session.get("spotify_token"):
-        return redirect("/login")
+        return redirect("/")
     sp = spotipy.Spotify(auth=session.get("spotify_token"))
     long_term_artists = sp.current_user_top_artists(time_range="long_term", limit=50)["items"]
     middle_term_artists = sp.current_user_top_artists(time_range="medium_term", limit=50)["items"]
@@ -135,7 +139,7 @@ def artists():
 @app.route("/recents")
 def recents():
     if not session.get("spotify_token"):
-        return redirect("/login")
+        return redirect("/")
     sp = spotipy.Spotify(auth=session.get("spotify_token"))
     tracks = sp.current_user_recently_played()["items"]
     # tracks = from_cache('r.json')
@@ -146,6 +150,12 @@ def recents():
 def login():
     auth_url = spotify.get_authorize_url()
     return redirect(auth_url)
+
+@app.route("/logout")
+def logout():
+    session.pop('spotify_token')
+    session.clear()
+    return redirect("/")
 
 
 @app.route("/callback")
