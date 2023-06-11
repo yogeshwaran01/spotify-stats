@@ -49,11 +49,15 @@ def clean_data(data: dict, type: str = "t"):
     if type == "t":
         tracks = []
         for item in data:
+            try:
+                ima = item["album"]["images"][0]["url"]
+            except IndexError:
+                ima = ""
             tracks.append(
                 Track(
                     item.get("name"),
                     group_artist(item["artists"]),
-                    item["album"]["images"][0]["url"],
+                    ima,
                     item["external_urls"]["spotify"],
                 )
             )
