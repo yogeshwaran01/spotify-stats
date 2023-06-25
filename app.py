@@ -99,7 +99,7 @@ def from_cache(file):
 def index():
     if not session.get("spotify_token"):
         return render_template("home.html", logged_in=False)
-    return render_template("home.html")
+    return render_template("home.html", username=session.get('username'), profile_pic=session.get('profile_pic'))
 
 
 @app.route("/top/tracks")
@@ -118,6 +118,7 @@ def tracks():
         lt=clean_data(long_term_tracks),
         mt=clean_data(middle_term_tracks),
         st=clean_data(short_term_tracks),
+        username=session.get('username'), profile_pic=session.get('profile_pic')
     )
 
 
@@ -136,7 +137,7 @@ def artists():
         "list.html",
         lt=clean_data(long_term_artists, type="a"),
         mt=clean_data(middle_term_artists, type="a"),
-        st=clean_data(short_term_artists, type="a"),
+        st=clean_data(short_term_artists, type="a"), username=session.get('username'), profile_pic=session.get('profile_pic')
     )
 
 
@@ -147,7 +148,7 @@ def recents():
     sp = spotipy.Spotify(auth=session.get("spotify_token"))
     tracks = sp.current_user_recently_played()["items"]
     # tracks = from_cache('r.json')
-    return render_template("recents.html", t=clean_data(tracks, type="r"))
+    return render_template("recents.html", t=clean_data(tracks, type="r"), username=session.get('username'), profile_pic=session.get('profile_pic'))
 
 
 @app.route("/login")
@@ -168,4 +169,9 @@ def callback():
     code = request.args.get("code")
     token_info = spotify.get_access_token(code)
     session["spotify_token"] = token_info["access_token"]
+    sp = spotipy.Spotify(auth=session.get("spotify_token"))
+    user_profile = sp.current_user()
+    session['username'] = user_profile['display_name']
+    session['profile_pic'] = user_profile['images'][0]['url']
+
     return redirect("/")

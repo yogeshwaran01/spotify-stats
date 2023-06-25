@@ -53,6 +53,17 @@
       .btn-spotify:hover {
         background-color: #1ed760;
       }
+      .user-image {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+      }
+  
+      .user-name {
+        margin-top: 10px;
+        font-size: 18px;
+        font-weight: bold;
+      }
     </style>
 </head>
 
@@ -65,6 +76,8 @@
     </div>
     {% else %}
     <div class="container text-center">
+        <img class="user-image" src="{{ profile_pic }}" alt="User Image">
+        <div class="user-name">{{ username }}</div>
         <a href="/logout" class="btn btn-primary btn-lg btn-spotify mx-auto" style="border-radius: 30px;">Logout</a>
     </div>
         
